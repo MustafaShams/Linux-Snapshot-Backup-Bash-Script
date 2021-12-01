@@ -1,28 +1,24 @@
 #!/bin/bash
 
-backups=("/home/ksham004" "/root/CS183/lab2")
+default_backups="/home/ksham004 /root/CS183/lab2 "
 
 day=$(date)
 day="${day// /_}"
 
 archive="$(hostname -s)-$day.tgz"
 
-read userbackups
+read user_backups
 
-echo $userbackups > custombackups.txt
+echo $user_backups > user_backups.txt
 
-backups+=( $userbackups )
+backups="$default_backups $user_backups"
 
-for i in ${!backups[@]}; do
-
-	echo ${backups[$i]}
-done
-
+echo $backups
 
 echo $archive >> /root/CS183_FinalProject/test.txt
 
-#tar czf /mnt/backup/$archive $backups
+tar czf /mnt/backup/$archive $backups
 
 #cp /mnt/backup/$archive /root/CS183_FinalProject/$archive
 
-#echo backup done
+echo backup done
