@@ -6,56 +6,46 @@ echo "======== RESTORE ========"
 
 if [ "$(ls -A /mnt/backup)" ];
 then
+	
 	echo "Select a backup file to restore: "
 	echo
 
 	#Clears index.txt
 	>  /share/CS183_FinalProject/index.txt
-
-	#Loops through directory and writes paths to index.txt
-	count=0
-	directory="/mnt/backup/*"
-
-	for line in $directory
-	do
-		count=$(( count + 1 ))
-		echo "[$count] $line" > /share/CS183_FinalProject/index.txt 
-	done
-
+	#Outputs /mnt/backup directory to index.txt
+	index="/share/CS183_FinalProject/index.txt"
+	ls -A -1 /mnt/backup > $index
+	
 	#Print list
-	cat /share/CS183_FinalProject/index.txt
+	cat $index
 	echo
-
-	echo "Selection: "; read selection; echo;
-
-	#Checks if it's a number
-	if ! [[ "$selection" =~ ^[0-9]+$ ]];
-	then
-		echo "ERROR: Invalid input"
-	else	
-		#Checks if the index exists
-		if [[ selection -gt count ]]
-		then
-			echo "ERROR: No file exists at index: $selection"
-		else
-			#Separates path from index
-			path=$(grep '[$selection]' /share/CS183_FinalProject/index.txt | cut -d ' ' -f 2)
-
-			if sudo tar -xzvf $path;
-			then
-				tput setaf 2; echo; echo "Complete! $path has been restored."; tput setaf 7;
-			else
-				echo; echo "ERROR: Failed to restore $path.";
-			fi
-		
-		fi
-	fi
+	
 else
 	echo "There are no backup files."
+	exit -1;
 fi
 
+#Checks if it exists
+
+	read -p "Enter here: " selection
+	echo;
+	
+	if grep -q $selection "$index"
+	then
+		#Restores the directory
+			if sudo tar -xzvf /mnt/backup/$selection;
+			then
+				tput setaf 2; echo; echo "Complete! $selection has been restored."; tput setaf 7;
+			else
+				echo; echo "ERROR: Failed to restore $selection.";
+			fi
+	else	
+			echo "ERROR: Backup file does not exist."
+	
+	fi
+	
 #Reset
-count=0
 > /share/CS183_FinalProject/index.txt
 
 cd /share/CS183_FinalProject
+

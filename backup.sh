@@ -14,23 +14,38 @@ day="${day// /_}"
 
 archive="$(hostname -s)-$day.tgz"
 
-#echo "Enter custom backup filename"
-#read custom_name
+echo "Do you want to create a custom backup filename? [y/N]: "
+read namechoice
+echo
 
+if [ "$namechoice" = "y" ];
+then
+	echo "Enter custom backup filename: "
+	read custom_name
+	archive="$custom_name.tgz"
+fi
+
+echo
 echo "Do you want to schedule routine backups? [y/N]: "
 read cronchoice
 
 if [ "$cronchoice" = "y" ];
 then
+	echo "enter the frequency/time to run your script in the format: * * * * *" 
+	read cronedit
+	cmd=" bash /root/CS183_FinalProject/backup.sh" 
 	crontab -l > mycron
-	echo "*/2 * * * * bash /share/CS183_FinalProject/backup.sh" >> mycron
+	echo "$cronedit$cmd" >> mycron
 	crontab mycron
+	rm -f mycron
 fi
 
 echo
 echo "Insert custom directories to backup or press ENTER: "
 read user_backups
 echo
+
+
 
 backups="$default_backups $user_backups"
 
@@ -40,7 +55,7 @@ if tar czf /mnt/backup/$archive $backups;
 then
 	tput setaf 2; echo; "Complete! Files were backed up."; tput setaf 7;
 fi
-#cp /mnt/backup/$archive /root/CS183_FinalProject/$archive
+
 
 
 
