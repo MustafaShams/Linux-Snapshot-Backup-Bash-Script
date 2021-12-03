@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #for test only
-default_backups="/home/ksham004 /root/CS183/lab2 "
+default_backups="/home/bmcgh001 /root/backup"
 
 real_default_backups="/home /etc /root /var /usr/local /srv /opt"
 
@@ -19,7 +19,7 @@ read cronchoice
 if [ "$cronchoice" = "y" ];
 then
 	crontab -l > mycron
-	echo "*/2 * * * * bash /root/CS183_FinalProject/backup.sh" >> mycron
+	echo "*/2 * * * * bash /share/CS183_FinalProject/backup.sh" >> mycron
 	crontab mycron
 fi
 
@@ -28,7 +28,7 @@ read user_backups
 
 backups="$default_backups $user_backups"
 
-echo $archive >> /root/CS183_FinalProject/test.txt
+echo $archive >> /share/CS183_FinalProject/test.txt
 
 tar czf /mnt/backup/$archive $backups
 
