@@ -53,7 +53,9 @@ echo $archive >> /share/CS183_FinalProject/test.txt
 
 if tar czf /mnt/backup/$archive $backups;
 then
-	tput setaf 2; echo; "Complete! Files were backed up."; tput setaf 7;
+	tput setaf 2
+	echo "Complete! Files were backed up."
+	tput setaf 7
 fi
 
 
