@@ -5,7 +5,7 @@ cd /
 echo "Enter backup file to restore: "
 read backupname
 
-sudo tar -xzvf /mnt/backup/$backupname 
+tar -xzvf /mnt/backup/$backupname 
 
 tput setaf 2; echo "RESTORE DONE"; tput setaf 7;
 
