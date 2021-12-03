@@ -1,53 +1,61 @@
 #!/bin/bash
-
 cd /
 
 echo
 echo "======== RESTORE ========"
-echo "Select a backup file to restore: "
-echo
 
-#Clears index.txt
-> index.txt
-
-#Loops through directory and writes paths to index.txt
-count=0
-directory="/mnt/backup/*"
-
-for line in $directory
-do
-	count=$(( count + 1 ))
-	echo "[$count] $line" > index.txt 
-done
-
-#Print list
-cat index.txt
-echo
-
-echo "Selection: "; read selection; echo;
-
-#Checks if it's a number
-if ! [[ "$selection" =~ ^[0-9]+$ ]];
+if [ "$(ls -A /mnt/backup)" ];
 then
-		echo "ERROR: Invalid input"
-else	
-	#Checks if the index exists
-	if [[ selection -gt count ]]
-	then
-		echo "ERROR: No file exists at index: $selection"
-	else
-		#Separates path from index
-		path=$(grep '[$selection]' index.txt | cut -d ' ' -f 2)
+	echo "Select a backup file to restore: "
+	echo
 
-		if sudo tar -xzvf $path;
+	#Clears index.txt
+	>  /share/CS183_FinalProject/index.txt
+
+	#Loops through directory and writes paths to index.txt
+	count=0
+	directory="/mnt/backup/*"
+
+	for line in $directory
+	do
+		count=$(( count + 1 ))
+		echo "[$count] $line" > /share/CS183_FinalProject/index.txt 
+	done
+
+	#Print list
+	cat /share/CS183_FinalProject/index.txt
+	echo
+
+	echo "Selection: "; read selection; echo;
+
+	#Checks if it's a number
+	if ! [[ "$selection" =~ ^[0-9]+$ ]];
+	then
+		echo "ERROR: Invalid input"
+	else	
+		#Checks if the index exists
+		if [[ selection -gt count ]]
 		then
-			tput setaf 2; echo; echo "Complete! $path has been restored."; tput setaf 7;
+			echo "ERROR: No file exists at index: $selection"
 		else
-			echo; echo "ERROR: Failed to restore $path.";
-		fi
+			#Separates path from index
+			path=$(grep '[$selection]' /share/CS183_FinalProject/index.txt | cut -d ' ' -f 2)
+
+			if sudo tar -xzvf $path;
+			then
+				tput setaf 2; echo; echo "Complete! $path has been restored."; tput setaf 7;
+			else
+				echo; echo "ERROR: Failed to restore $path.";
+			fi
 		
+		fi
 	fi
+else
+	echo "There are no backup files."
 fi
-echo "========================="
+
+#Reset
+count=0
+> /share/CS183_FinalProject/index.txt
 
 cd /share/CS183_FinalProject
