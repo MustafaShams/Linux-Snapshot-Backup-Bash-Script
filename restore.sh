@@ -2,6 +2,15 @@
 
 cd /
 
+ls -A /mnt/backup > /root/CS183_FinalProject/index.txt
+echo
+echo "Backup files available to restore: "
+echo
+
+cat /root/CS183_FinalProject/index.txt
+rm -f /root/CS183_FinalProject/index.txt
+echo
+
 echo "Enter backup file to restore: "
 read backupname
 
